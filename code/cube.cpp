@@ -70,46 +70,22 @@ namespace cube
             glVertexAttribPointer(1, 2, GL_FLOAT, GL_FLOAT, 5 * sizeof(float), (void*)(3 * sizeof(float)));
             glEnableVertexAttribArray(1);
                         
-            Result.Type = RENDERABLE_TYPE::ARRAYS;
-            
             // Keep track of ID
             Result.ID = LastAvailableID;
             Buffer[LastAvailableID++] = Result;
         }
     }
     
-    static void Update()
-    {            
+    void Update()
+    {
         // Check buffer for valid
         if(Buffer)
         {
             // Loop up to LastAvailableID
             for(int BufferIndex = 0; BufferIndex < LastAvailableID; ++BufferIndex)
-            {   
-                glEnable(GL_DEPTH_TEST);  
-                glUseProgram(Buffer[BufferIndex].ShaderInfo.ShaderID);
-                
-                if(Buffer[BufferIndex].bOrtho)
-                {
-                    glDisable(GL_DEPTH_TEST);  
-                }
-                else
-                {                    
-                    // Camera
-                    camera::TransformCamera(Buffer[BufferIndex].ShaderInfo.ShaderID);
-                }
-                
-                // Transform
-                unsigned int TransformLocation = glGetUniformLocation(Buffer[BufferIndex].ShaderInfo.ShaderID, "transform");                
-                M4 TransformMatrix = Translate(Buffer[BufferIndex].Transform.Location);
-                glUniformMatrix4fv(TransformLocation, 1, GL_FALSE, TransformMatrix.M[0]);  
-                
-                // Render
-                glBindTexture(GL_TEXTURE_2D, Buffer[BufferIndex].TextureInfo.TextureID);
-                glBindVertexArray(Buffer[BufferIndex].VAO);
-                glDrawArrays(GL_TRIANGLES, 0, 36);
-                glBindVertexArray(0); 
+            {                   
+                renderable::Update(Buffer[BufferIndex]);
             }
-        }
+        }        
     }    
 };
