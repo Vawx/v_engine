@@ -74,9 +74,43 @@ namespace input
         }
     }
     
+    static void ClearWindowEvents()
+    {
+        for(int WindowEventIndex = 0; WindowEventIndex < KEY_PRESSES; ++WindowEventIndex)
+        {
+            WindowEvents[WindowEventIndex] = {};
+        }
+    }
+    
+    static void AddWindowEvent(SDL_WindowEvent Event)
+    {        
+        for(int WindowEventIndex = 0; WindowEventIndex < KEY_PRESSES; ++WindowEventIndex)
+        {
+            if(WindowEvents[WindowEventIndex].event == 0)
+            {
+                WindowEvents[WindowEventIndex] = Event;
+                return;
+            }
+        }
+    }
+    
+    SDL_WindowEvent GetPresentWindowEvent(Uint8 EventID)
+    {
+        SDL_WindowEvent Event = {};
+        for(int WindowEventIndex = 0; WindowEventIndex < KEY_PRESSES; ++WindowEventIndex)
+        {
+            if(WindowEvents[WindowEventIndex].event == EventID)
+            {
+                Event = WindowEvents[WindowEventIndex];
+            }
+        }
+        return Event;
+    }                                         
+    
     bool Process()
     {   
         WheelDirection = MOUSE_WHEEL_DIRECTION::MAX;
+        ClearWindowEvents();
         
         SDL_Event Event;
         while(SDL_PollEvent(&Event))
@@ -86,6 +120,20 @@ namespace input
                 case SDL_QUIT:
                 {
                     return false;
+                }
+                break;
+                
+                case SDL_WINDOWEVENT:
+                {    
+                    AddWindowEvent(Event.window);    
+                    switch(Event.window.event)
+                    {
+                        case SDL_WINDOWEVENT_SIZE_CHANGED:
+                        {
+                            SDL_Log("Window Size Changed Width: %d Height: %d", Event.window.data1, Event.window.data2);
+                        }
+                        break;
+                    }
                 }
                 break;
                 

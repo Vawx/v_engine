@@ -16,8 +16,15 @@ namespace display
     SDL_Window* Window;
     SDL_GLContext Context;
     
+    static int CurrentWindowWidth;
+    static int CurrentWindowHeight;
+    
+    static V2 WindowSize;
+    
     static void Make();
     static bool Update();
+    static void UpdateWindowSize(const int Width, const int Height);
+    static V2 GetWindowSize();
 };
 
 #endif

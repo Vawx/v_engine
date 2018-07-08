@@ -14,6 +14,13 @@ namespace camera
         RotateCamera(1.f, 1.f);
     }
     
+    static void ReInit(const int Width, const int Height)
+    {   
+        const float NewAspectRation = ((float)WINDOW_WIDTH / (float)WINDOW_HEIGHT);
+        Projection = Perspective(DEFAULT_FOV, NewAspectRation, 0.001f, 10000.f);
+        Ortho = Orthographic(0.f, Width, 0.f, Height, 0.1f, 100.f);
+    }
+    
     static void RotateCamera(const float XOffset, const float YOffset)
     {
         Transform.Rotation.X += XOffset;
@@ -137,10 +144,11 @@ namespace camera
         LastMouseY = CurrentMouseY;
         LastMouseX = CurrentMouseX;
         
-        View = LookAt(Transform.Location, Transform.Location + CameraDirection, V3_UP);
+        View = LookAt(Transform.Location, Transform.Location + CameraDirection, V3_UP);        
     }
     
-    void TransformCamera(const GLuint ShaderID, bool bOrtho)
+    
+    void TransformCamera(const GLuint ShaderID)
     {           
         unsigned int ViewID = glGetUniformLocation(ShaderID, "view");
         glUniformMatrix4fv(ViewID, 1, GL_FALSE, View.M[0]);  

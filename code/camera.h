@@ -20,7 +20,7 @@ namespace camera
     
     static void Init();
     static void Update();
-    static void TransformCamera(const GLuint ShaderID, bool bOrtho);
+    static void TransformCamera(const GLuint ShaderID);
     
     static void RotateCamera(const float XOffset, const float YOffset);
 };

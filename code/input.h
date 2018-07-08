@@ -20,6 +20,8 @@ namespace input
     
     MOUSE_WHEEL_DIRECTION WheelDirection;
     
+    SDL_WindowEvent WindowEvents[KEY_PRESSES];
+    
     static bool Process();  
     
     static bool KeyPressed(SDL_Keycode Key);
@@ -29,6 +31,10 @@ namespace input
     static bool ButtonPressed(Uint8 Button);
     static void MouseAddKey(SDL_MouseButtonEvent Button);
     static void MouseRemoveKey(SDL_MouseButtonEvent Button);
+        
+    static void AddWindowEvent(SDL_WindowEvent Event);
+    static SDL_WindowEvent GetPresentWindowEvent(Uint8 EventID);
+    
 };
 
 #endif

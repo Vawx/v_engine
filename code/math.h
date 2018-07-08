@@ -40,7 +40,27 @@ namespace math
         };
     };
     
+    union V2
+    {
+        float Elements[2];
+        struct
+        {
+            float X, Y;
+        };
+        
+        struct
+        {
+            float Min, Max;
+        };
+        
+        struct 
+        {
+            float Width, Height;  
+        };
+    };
+    
     static V3 MakeV3(const float X, const float Y, const float Z);    
+    static V2 MakeV2(const float X, const float Y);
     static M4 Perspective(const float FOV, const float AspectRatio, const float NearPlane, const float FarPlane);
     static M4 Orthographic(const float Left, const float Right, const float Bottom, const float Top, const float Near, const float Far);
     static V3 Cross(const V3 Left, const V3 Right);

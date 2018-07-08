@@ -45,6 +45,8 @@ namespace cube
             
             Result.Transform = Transform;
             
+            Result.Type = RENDERABLE_TYPE::ARRAYS;
+            
             // Keep track of ID
             Result.ID = LastAvailableID;
             Buffer[LastAvailableID++] = Result;            
@@ -67,6 +69,8 @@ namespace cube
             
             glVertexAttribPointer(1, 2, GL_FLOAT, GL_FLOAT, 5 * sizeof(float), (void*)(3 * sizeof(float)));
             glEnableVertexAttribArray(1);
+                        
+            Result.Type = RENDERABLE_TYPE::ARRAYS;
             
             // Keep track of ID
             Result.ID = LastAvailableID;
@@ -92,7 +96,7 @@ namespace cube
                 else
                 {                    
                     // Camera
-                    camera::TransformCamera(Buffer[BufferIndex].ShaderInfo.ShaderID, Buffer[BufferIndex].bOrtho);
+                    camera::TransformCamera(Buffer[BufferIndex].ShaderInfo.ShaderID);
                 }
                 
                 // Transform

@@ -11,6 +11,7 @@ namespace renderable
         Result.ShaderInfo = shader::Make(bOrtho);
         Result.TextureInfo = image::Load(TextureFilePath);
         Result.Transform = transforms::Empty();
+        Result.PointCount = sizeof(Vertices);
         
         glGenVertexArrays(1, &Result.VAO);
         glGenBuffers(1, &Result.VBO);
@@ -32,6 +33,7 @@ namespace renderable
         Result.ShaderInfo = shader::Make(bOrtho);
         Result.TextureInfo = image::Load(TextureFilePath);
         Result.Transform = transforms::Empty();
+        Result.PointCount = sizeof(Vertices);
         
         glGenVertexArrays(1, &Result.VAO);
         glGenBuffers(1, &Result.VBO);
@@ -41,14 +43,44 @@ namespace renderable
         glBindBuffer(GL_ARRAY_BUFFER, Result.VBO);
         glBufferData(GL_ARRAY_BUFFER, VerticesSize, Vertices, GL_STATIC_DRAW);
         
-        Result.EBO = -1;
+        Result.EBO = 0;
         return Result;
     }
     
-    bool bValid(const renderable_info Info)  
-    {     
-        // Valid is VBO, VAO, EBO, ShaderProgramID GREATER THAN 0.
-        // (Default cleared all to 0).
-        return Info.VBO > 0 && Info.VAO > 0 && Info.EBO > 0 && Info.ShaderInfo.ShaderID > 0;
+    void Update(renderable_info Info)
+    {        
+        glEnable(GL_DEPTH_TEST);                  
+        glUseProgram(Info.ShaderInfo.ShaderID);
+        
+        if(Info.bOrtho)
+        {
+            glDisable(GL_DEPTH_TEST);  
+        }
+        else
+        {                    
+            // Camera
+            camera::TransformCamera(Info.ShaderInfo.ShaderID);                                    
+        }
+        
+        // Transform
+        unsigned int TransformLocation = glGetUniformLocation(Info.ShaderInfo.ShaderID, "transform");                
+        M4 TransformMatrix = Translate(Info.Transform.Location);
+        Scale(&TransformMatrix, Info.Transform.Scale);                
+        glUniformMatrix4fv(TransformLocation, 1, GL_FALSE, TransformMatrix.M[0]);  
+        
+        // Render
+        glBindTexture(GL_TEXTURE_2D, Info.TextureInfo.TextureID);
+        glBindVertexArray(Info.VAO);
+        
+        if(Info.Type == RENDERABLE_TYPE::ELEMENTS)
+        {
+            glDrawElements(GL_TRIANGLES, Info.PointCount, GL_UNSIGNED_INT, 0);
+        }
+        else if(Info.Type == RENDERABLE_TYPE::ARRAYS)
+        {
+            glDrawArrays(GL_TRIANGLES, 0, Info.PointCount);
+        }
+        
+        glBindVertexArray(0);      
     }
 };

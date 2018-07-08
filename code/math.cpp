@@ -13,6 +13,14 @@ namespace math
         return Result;
     }
     
+    V2 MakeV2(const float X, const float Y)
+    {
+        V2 Result = {};
+        Result.X = X;
+        Result.Y = Y;
+        return Result;
+    }
+    
     M4 Perspective(const float FOV, const float AspectRatio, const float NearPlane, const float FarPlane)
     {
         M4 Result = IDENTITY_MATRIX;

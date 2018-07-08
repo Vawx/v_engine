@@ -12,9 +12,18 @@ namespace renderable
     static void DeleteBuffer(); \
     static void Make(const char* TextureFilePath, bool bOrtho); \
     static void Make(const char* TextureFilePath, const transforms::transform Transform, bool bOrtho); \
+    static renderable_info MakeAndReturn(const char* TextureFilePath, const transforms::transform Transform, bool bOrtho); \
     static void Update(); \
     static unsigned int LastAvailableID = 0; \
     static renderable_info* Buffer = nullptr; 
+    
+    enum RENDERABLE_TYPE
+    {
+        ARRAYS,
+        ELEMENTS,
+        
+        MAX
+    };
     
     struct renderable_info
     {        
@@ -22,6 +31,8 @@ namespace renderable
         unsigned int VAO;
         unsigned int EBO;
         unsigned int ID;
+        int PointCount;
+        RENDERABLE_TYPE Type;
         bool bOrtho;
 
         transforms::transform Transform;
@@ -31,7 +42,7 @@ namespace renderable
     
     static renderable_info Make(const char* TextureFilePath, const int VerticesSize, const float Vertices[], const int IndiceSize, const unsigned int Indices[], bool bOrtho);
     static renderable_info Make(const char* TextureFilePath, const int VerticesSize, const float Vertices[], bool bOrtho);
-    static bool bValid(const renderable_info Info);    
+    static void Update(renderable_info Info);
 };
 
 #endif
