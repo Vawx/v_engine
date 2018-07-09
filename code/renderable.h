@@ -31,7 +31,6 @@ namespace renderable
         unsigned int VAO;
         unsigned int EBO;
         unsigned int ID;
-        int PointCount;
         RENDERABLE_TYPE Type;
         bool bOrtho;
 

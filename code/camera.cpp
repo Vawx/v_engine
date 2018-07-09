@@ -112,8 +112,8 @@ namespace camera
         }
         else if(ButtonPressed(SDL_BUTTON_RIGHT))
         {               
-            const float DifferenceX = (LastMouseX - CurrentMouseX) * (timing::DeltaTime * 10.f);
-            const float DifferenceY = (CurrentMouseY - LastMouseY) * (timing::DeltaTime * 10.f);
+            const float DifferenceX = (LastMouseX - CurrentMouseX) * MOVE_SPEED_SET(timing::DeltaTime, 10.f);
+            const float DifferenceY = (CurrentMouseY - LastMouseY) * MOVE_SPEED_SET(timing::DeltaTime, 10.f);
             
             if(DifferenceX != 0.f || DifferenceY != 0.f)
             {

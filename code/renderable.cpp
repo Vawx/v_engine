@@ -11,7 +11,6 @@ namespace renderable
         Result.ShaderInfo = shader::Make(bOrtho);
         Result.TextureInfo = image::Load(TextureFilePath);
         Result.Transform = transforms::Empty();
-        Result.PointCount = sizeof(Vertices);
         
         glGenVertexArrays(1, &Result.VAO);
         glGenBuffers(1, &Result.VBO);
@@ -33,7 +32,6 @@ namespace renderable
         Result.ShaderInfo = shader::Make(bOrtho);
         Result.TextureInfo = image::Load(TextureFilePath);
         Result.Transform = transforms::Empty();
-        Result.PointCount = sizeof(Vertices);
         
         glGenVertexArrays(1, &Result.VAO);
         glGenBuffers(1, &Result.VBO);
@@ -74,11 +72,11 @@ namespace renderable
         
         if(Info.Type == RENDERABLE_TYPE::ELEMENTS)
         {
-            glDrawElements(GL_TRIANGLES, Info.PointCount, GL_UNSIGNED_INT, 0);
+            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         }
         else if(Info.Type == RENDERABLE_TYPE::ARRAYS)
         {
-            glDrawArrays(GL_TRIANGLES, 0, Info.PointCount);
+            glDrawArrays(GL_TRIANGLES, 0, 36);
         }
         
         glBindVertexArray(0);      

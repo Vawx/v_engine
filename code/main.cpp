@@ -22,7 +22,7 @@ int main(int argc, char* argv[])
         cube::Make("../content/default_grid.tga", transforms::MakeFromVector(cubePositions[i]), false); 
     }
     
-    transform QuadTransform = transforms::Make(MakeV3(0.f, 0.f, 0.f), MakeV3(0.f, 0.f, 0.f), MakeV3(0.5f, 0.5f, 0.5f));
+    transform QuadTransform = transforms::Make(MakeV3(0.f, 0.95f, 0.f), MakeV3(0.f, 0.f, 0.f), MakeV3(1.f, 0.05f, 1.f));
     quad::Make("../content/orange.tga", QuadTransform, true);
     while(display::Update())
     {
