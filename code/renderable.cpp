@@ -72,11 +72,11 @@ namespace renderable
         
         if(Info.Type == RENDERABLE_TYPE::ELEMENTS)
         {
-            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+            glDrawElements(GL_TRIANGLES, Info.IndiceCount, GL_UNSIGNED_INT, 0);
         }
         else if(Info.Type == RENDERABLE_TYPE::ARRAYS)
         {
-            glDrawArrays(GL_TRIANGLES, 0, 36);
+            glDrawArrays(GL_TRIANGLES, 0, Info.IndiceCount);
         }
         
         glBindVertexArray(0);      

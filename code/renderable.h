@@ -31,6 +31,7 @@ namespace renderable
         unsigned int VAO;
         unsigned int EBO;
         unsigned int ID;
+        unsigned int IndiceCount;
         RENDERABLE_TYPE Type;
         bool bOrtho;
 

@@ -47,6 +47,8 @@ namespace cube
             
             Result.Type = RENDERABLE_TYPE::ARRAYS;
             
+            Result.IndiceCount = CUBE_INDICIES;
+            
             // Keep track of ID
             Result.ID = LastAvailableID;
             Buffer[LastAvailableID++] = Result;            
@@ -69,6 +71,8 @@ namespace cube
             
             glVertexAttribPointer(1, 2, GL_FLOAT, GL_FLOAT, 5 * sizeof(float), (void*)(3 * sizeof(float)));
             glEnableVertexAttribArray(1);
+            
+            Result.IndiceCount = CUBE_INDICIES;
                         
             // Keep track of ID
             Result.ID = LastAvailableID;

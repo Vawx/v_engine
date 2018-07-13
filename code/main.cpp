@@ -4,6 +4,8 @@ int main(int argc, char* argv[])
 {   
     display::Make();
     
+    load_obj::LoadObj("../content/Cube.obj");
+    
     V3 cubePositions[] = {
         MakeV3( 0.0f,  0.0f,  0.0f), 
         MakeV3( 2.0f,  5.0f, -15.0f), 

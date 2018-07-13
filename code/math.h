@@ -61,6 +61,8 @@ namespace math
     
     static V3 MakeV3(const float X, const float Y, const float Z);    
     static V2 MakeV2(const float X, const float Y);
+    static bool EmptyV3(const V3 Left);
+    static bool EmptyV2(const V2 Left);
     static M4 Perspective(const float FOV, const float AspectRatio, const float NearPlane, const float FarPlane);
     static M4 Orthographic(const float Left, const float Right, const float Bottom, const float Top, const float Near, const float Far);
     static V3 Cross(const V3 Left, const V3 Right);

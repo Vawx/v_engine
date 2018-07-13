@@ -21,6 +21,16 @@ namespace math
         return Result;
     }
     
+    bool EmptyV3(const V3 Left)
+    {
+        return (Left.X == 0.f && Left.Y == 0.f && Left.Z == 0.f);
+    }
+    
+    bool EmptyV2(const V2 Left)
+    {
+        return(Left.X == 0.f && Left.Y == 0.f);
+    }
+    
     M4 Perspective(const float FOV, const float AspectRatio, const float NearPlane, const float FarPlane)
     {
         M4 Result = IDENTITY_MATRIX;

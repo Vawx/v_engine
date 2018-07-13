@@ -124,11 +124,11 @@ namespace camera
         {
             if(CurrentMouseY > LastMouseY)
             {                
-                Transform.Location -= CameraDirection * MOVE_SPEED_SET(timing::DeltaTime, 20.f);
+                Transform.Location -= CameraDirection * MOVE_SPEED_SET(timing::DeltaTime, 40.f);
             }
             else if(CurrentMouseY < LastMouseY)
             {                
-                Transform.Location += CameraDirection * MOVE_SPEED_SET(timing::DeltaTime, 20.f);
+                Transform.Location += CameraDirection * MOVE_SPEED_SET(timing::DeltaTime, 40.f);
             }
         }
         

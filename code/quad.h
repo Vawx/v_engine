@@ -5,7 +5,9 @@
 using namespace renderable;
 
 namespace quad
-{    
+{   
+    #define QUAD_INDICES 6
+    
     static float Vertices[] = {
          1.f,  1.f, 0.0f, 1.f, 1.f,
          1.f, -1.f, 0.0f, 1.f, 0.f,

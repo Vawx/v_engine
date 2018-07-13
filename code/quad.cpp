@@ -71,6 +71,7 @@ namespace quad
             glEnableVertexAttribArray(1);
             
             Result.Transform = Transform;
+            Result.IndiceCount = QUAD_INDICES;
             
             Result.Type = RENDERABLE_TYPE::ELEMENTS;
             // Keep track of ID
@@ -92,6 +93,7 @@ namespace quad
         glEnableVertexAttribArray(1);
         
         Result.Type = RENDERABLE_TYPE::ELEMENTS;        
+        Result.IndiceCount = QUAD_INDICES;
         
         Result.Transform = Transform;
         
