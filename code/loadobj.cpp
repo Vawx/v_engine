@@ -4,67 +4,10 @@
 #include <iostream>
 
 namespace load_obj
-{
-    static int Add(V3* Buffer, const V3 Right)
-    {
-        int Count = 0;
-        V3* TempBuffer = &Buffer[0];
-        for(int VertexIndex = 0; VertexIndex < TEMP_BUFFER_SIZE; ++VertexIndex)
-        {
-            Count++;
-            if(EmptyV3(*TempBuffer))
-            {
-                *TempBuffer = Right;
-                return Count;
-            }
-            TempBuffer++;
-        }        
-        return TEMP_BUFFER_SIZE;
-    }
-    
-    static int Add(V2* Buffer, const V2 Right)
-    {        
-        int Count = 0;
-        V2* TempBuffer = &Buffer[0];
-        for(int VertexIndex = 0; VertexIndex < TEMP_BUFFER_SIZE; ++VertexIndex)
-        {
-            Count++;
-            if(EmptyV2(*TempBuffer))
-            {
-                *TempBuffer = Right;
-                return Count;
-            }
-            TempBuffer++;
-        }        
-        return TEMP_BUFFER_SIZE;
-    }
-    
-    static void AddIndex(unsigned int* Buffer, const int Right)
-    {
-        
-    }
-    
-    static loaded_obj MakeEmptyLoadedObj()
-    {
-        loaded_obj Result = {};
-        
-        Result.Vertices.Vertex = (V3*)calloc(TEMP_BUFFER_SIZE, sizeof(V3) * TEMP_BUFFER_SIZE);
-        Result.UVs.UVVertex = (V2*)calloc(TEMP_BUFFER_SIZE, sizeof(V2) * TEMP_BUFFER_SIZE);
-        Result.Normals.Vertex = (V3*)calloc(TEMP_BUFFER_SIZE, sizeof(V3) * TEMP_BUFFER_SIZE);
-        
-        return Result;
-    }
-    
-    static void SizeIndices(loaded_obj Of, const int Count)
-    {        
-        Of.Vertices.Indice = (unsigned int*)malloc(sizeof(unsigned int) * Count);
-        Of.UVs.Indice = (unsigned int*)malloc(sizeof(unsigned int) * Count);
-        Of.Normals.Indice = (unsigned int*)malloc(sizeof(unsigned int) * Count);
-    }
-    
+{   
     loaded_obj LoadObj(const char* FilePath)
     {
-        loaded_obj Result = MakeEmptyLoadedObj();
+        loaded_obj Result = {};
         
         int LastTempVertIndex = 0;
         int LastTempUVsIndex = 0;

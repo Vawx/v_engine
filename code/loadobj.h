@@ -2,6 +2,8 @@
 #define LOAD_OBJ_H
 
 /*
+Simple Wavefront Obj parsing.
+
 v is a vertex
 vt is the texture coordinate of one vertex
 vn is the normal of one vertex
@@ -18,6 +20,8 @@ namespace load_obj
     #define OBJECT_NAME "g"
     
     #define TEMP_BUFFER_SIZE 8096    
+    
+    // Supporting non trianglated quads
     #define FACE_MATCH_COUNT 12
     
     struct vertex_indice_data
@@ -42,12 +46,8 @@ namespace load_obj
         vertex_indice_data UVs;
         vertex_indice_data Normals;
     };
-    
-    
-    static loaded_obj LoadObj(const char* FilePath);
-    
-    /** Returns total number of entries in Buffer */
-    static int Add(V3* Buffer, const V3 Right);
+        
+    static loaded_obj LoadObj(const char* FilePath);  
 };
 
 #endif
