@@ -7,6 +7,8 @@
 
 namespace display
 {
+    #define RENDER_POLYS 1
+    
     enum SwapInterval
     {
         IMMEDIATE = 0,

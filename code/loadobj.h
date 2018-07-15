@@ -19,28 +19,29 @@ namespace load_obj
     #define VERTEX_FACE "f"
     #define OBJECT_NAME "g"
     
-    #define TEMP_BUFFER_SIZE 8096    
+    #define TEMP_BUFFER_SIZE 20000        
+    #define TRIANGLE_FACE_MATCH_COUNT 9
     
-    // Supporting non trianglated quads
-    #define FACE_MATCH_COUNT 12
+    enum object_faces
+    {
+        NONE,
+        QUAD,
+        TRIANGLE,
+    };
     
     struct vertex_indice_data
     {
         V3* Vertex;
-        unsigned int* Indice;
+        int* Indice;
         
-        union
-        {
-            V2* UVVertex;
-        };
-        
-        unsigned int VertexCount;
-        unsigned int IndiceCount;
+        int IndiceCount;
+        int VertexSize;
     };
     
     struct loaded_obj
     {
         char* ObjectName;
+        object_faces FaceType;
         
         vertex_indice_data Vertices;
         vertex_indice_data UVs;

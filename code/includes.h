@@ -2,6 +2,7 @@
 #define _INCLUDES_H_
 
 #define Assert(Expression) if(!(Expression)) {*(int *)0 = 0;}
+#define ArrayCount(Array) (sizeof(Array) / sizeof((Array)[0]))
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32)
 #define WINDOWS
@@ -30,11 +31,12 @@ SDL_Log("Using Malloc!");
 #include "camera.cpp"
 #include "display.cpp"
 
+#include "loadobj.cpp"
+
 #include "cube.cpp"
 #include "quad.cpp"
+#include "mesh.cpp"
 
 #include "ui.cpp"
-
-#include "loadobj.cpp"
 
 #endif

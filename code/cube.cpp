@@ -8,7 +8,7 @@ namespace cube
     {
         if(Buffer == nullptr)
         {
-            Buffer = (renderable_info*)malloc(BUFFER_SIZE);
+            Buffer = (renderable_info*)PlatformAlloc(BUFFER_SIZE);
             
             renderable_info Empty = {};            
             for(int BufferIndex = 0; BufferIndex < BUFFER_SIZE / sizeof(renderable_info); ++BufferIndex)
@@ -63,17 +63,18 @@ namespace cube
         if(LastAvailableID < BUFFER_SIZE)
         {
             // Create quad
-            renderable_info Result = renderable::Make(TextureFilePath, sizeof(Vertices), Vertices, bOrtho);
+            renderable_info Result = renderable::Make(TextureFilePath, sizeof(Vertices), Vertices, sizeof(Indices), Indices, bOrtho);
             
             // Attribs for aPos and aTexCoord layout in shader (0), (1)
-            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
             glEnableVertexAttribArray(0);    
             
-            glVertexAttribPointer(1, 2, GL_FLOAT, GL_FLOAT, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-            glEnableVertexAttribArray(1);
+//            glVertexAttribPointer(1, 2, GL_FLOAT, GL_FLOAT, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+//            glEnableVertexAttribArray(1);
             
             Result.IndiceCount = CUBE_INDICIES;
-                        
+            Result.Type = RENDERABLE_TYPE::ELEMENTS;
+            
             // Keep track of ID
             Result.ID = LastAvailableID;
             Buffer[LastAvailableID++] = Result;

@@ -5,7 +5,7 @@
 
 namespace renderable
 {
-    renderable_info Make(const char* TextureFilePath, const int VerticesSize, const float Vertices[], const int IndiceSize, const unsigned int Indices[], bool bOrtho)
+    renderable_info Make(const char* TextureFilePath, const int VerticesSize, const float Vertices[], const int IndiceSize, const int Indices[], bool bOrtho)
     {
         renderable_info Result = {};
         Result.ShaderInfo = shader::Make(bOrtho);
@@ -45,6 +45,25 @@ namespace renderable
         return Result;
     }
     
+    static renderable_info Make(const char* TextureFilePath, const int VerticesSize, const V3 Vertices[], bool bOrtho)
+    {        
+        renderable_info Result = {};
+        Result.ShaderInfo = shader::Make(bOrtho);
+        Result.TextureInfo = image::Load(TextureFilePath);
+        Result.Transform = transforms::Empty();
+        
+        glGenVertexArrays(1, &Result.VAO);
+        glGenBuffers(1, &Result.VBO);
+        
+        glBindVertexArray(Result.VAO);
+        
+        glBindBuffer(GL_ARRAY_BUFFER, Result.VBO);
+        glBufferData(GL_ARRAY_BUFFER, VerticesSize, &Vertices[0], GL_STATIC_DRAW);
+        
+        Result.EBO = 0;
+        return Result;
+    }
+    
     void Update(renderable_info Info)
     {        
         glEnable(GL_DEPTH_TEST);                  
@@ -72,11 +91,16 @@ namespace renderable
         
         if(Info.Type == RENDERABLE_TYPE::ELEMENTS)
         {
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Info.EBO);
             glDrawElements(GL_TRIANGLES, Info.IndiceCount, GL_UNSIGNED_INT, 0);
         }
         else if(Info.Type == RENDERABLE_TYPE::ARRAYS)
         {
             glDrawArrays(GL_TRIANGLES, 0, Info.IndiceCount);
+        }
+        else
+        {
+            SDL_Log("Cannot draw. Incorrect type: %d", Info.Type);
         }
         
         glBindVertexArray(0);      

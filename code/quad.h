@@ -15,7 +15,7 @@ namespace quad
         -1.f,  1.f, 0.0f, 0.f, 1.f
     }; 
     
-    static unsigned int Indices[] = {  
+    static int Indices[] = {  
         0, 1, 3,   
         1, 2, 3   
     };  

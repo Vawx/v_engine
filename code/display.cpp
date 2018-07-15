@@ -19,6 +19,11 @@ namespace display
                 GLenum Error = glewInit();
                 if(Error == GLEW_OK)
                 {                    
+                    if(RENDER_POLYS)
+                    {
+                        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+                    }
+                    
                     SDL_GL_SetSwapInterval(SwapInterval::VSYNC);
                     camera::Init(ASPECT_RATIO);                    
                 }

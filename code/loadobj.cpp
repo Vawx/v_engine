@@ -5,6 +5,7 @@
 
 namespace load_obj
 {   
+    
     loaded_obj LoadObj(const char* FilePath)
     {
         loaded_obj Result = {};
@@ -14,16 +15,16 @@ namespace load_obj
         int LastTempNormalsIndex = 0;
         
         V3 TempVertices[TEMP_BUFFER_SIZE] = {};
-        V2 TempUVs[TEMP_BUFFER_SIZE] = {};
-        V3 TempNormals[TEMP_BUFFER_SIZE] = {};
+//        V2 TempUVs[TEMP_BUFFER_SIZE] = {};
+//        V3 TempNormals[TEMP_BUFFER_SIZE] = {};
                 
         int LastTempVertIndiceIndex = 0;
         int LastTempUVsIndiceIndex = 0;
         int LastTempNormalsIndiceIndex = 0;
         
-        unsigned int TempVerticeIndices[TEMP_BUFFER_SIZE] = {};
-        unsigned int TempUVsIndices[TEMP_BUFFER_SIZE] = {};
-        unsigned int TempNormalsIndices[TEMP_BUFFER_SIZE] = {};
+        int TempVerticeIndices[TEMP_BUFFER_SIZE] = {};
+//        int TempUVsIndices[TEMP_BUFFER_SIZE] = {};
+//        int TempNormalsIndices[TEMP_BUFFER_SIZE] = {};
         
         FILE* File = fopen(FilePath, "r");
         if(File)
@@ -48,38 +49,54 @@ namespace load_obj
                     }
                     else if(strcmp(Line, VERTEX) == 0)
                     {
-                        V3 Vertex = {};
-                        fscanf(File, "%f %f %f", &Vertex.X, &Vertex.Y, &Vertex.Z);
-                        TempVertices[LastTempVertIndex++] = Vertex;
+                        float Temp[3] = {};
+                        fscanf(File, "%f %f %f", &Temp[0], &Temp[1], &Temp[2]);                        
+                        TempVertices[LastTempVertIndex].X = Temp[0];
+                        TempVertices[LastTempVertIndex].Y = Temp[1];
+                        TempVertices[LastTempVertIndex++].Z = Temp[2];
+                        
                     }
                     else if(strcmp(Line, VERTEX_TEXTURE_COORDINATE) == 0)
                     {
-                        V2 Vertex= {};
-                        fscanf(File, "%f %f", &Vertex.X, &Vertex.Y);
-                        TempUVs[LastTempUVsIndex++] = Vertex;
+                        float Temp[2] = {};
+                        fscanf(File, "%f %f", &Temp[0], &Temp[1]);
+//                        TempUVs[LastTempUVsIndex].X = Temp[0];
+//                        TempUVs[LastTempUVsIndex++].Y = Temp[1];
                     }
                     else if(strcmp(Line, VERTEX_NORMAL) == 0)
-                    {
-                        V3 Vertex = {};
-                        fscanf(File, "%f %f %f", &Vertex.X, &Vertex.Y, &Vertex.Z);
-                        TempNormals[LastTempNormalsIndex++] = Vertex;
+                    {                        
+                        float Temp[3] = {};
+                        fscanf(File, "%f %f %f", &Temp[0], &Temp[1], &Temp[2]);                        
+//                        TempNormals[LastTempNormalsIndex].X = Temp[0];
+//                        TempNormals[LastTempNormalsIndex].Y = Temp[1];
+//                        TempNormals[LastTempNormalsIndex++].Z = Temp[2];
                     }
                     else if(strcmp(Line, VERTEX_FACE) == 0)
                     {   
-                        int Matches = fscanf(File, "%d/%d/%d %d/%d/%d %d/%d/%d %d/%d/%d\n", 
-                                             &TempVerticeIndices[LastTempVertIndiceIndex++], &TempUVsIndices[LastTempUVsIndiceIndex++], &TempNormalsIndices[LastTempNormalsIndiceIndex++],
-                                             &TempVerticeIndices[LastTempVertIndiceIndex++], &TempUVsIndices[LastTempUVsIndiceIndex++], &TempNormalsIndices[LastTempNormalsIndiceIndex++],
-                                             &TempVerticeIndices[LastTempVertIndiceIndex++], &TempUVsIndices[LastTempUVsIndiceIndex++], &TempNormalsIndices[LastTempNormalsIndiceIndex++],
-                                             &TempVerticeIndices[LastTempVertIndiceIndex++], &TempUVsIndices[LastTempUVsIndiceIndex++], &TempNormalsIndices[LastTempNormalsIndiceIndex++]);
                         
-                        if(Matches != FACE_MATCH_COUNT)
+                        int Test[9] = {};
+                        const int TriangleMatches = fscanf(File, " %d/%d/%d %d/%d/%d %d/%d/%d\n", &Test[0],&Test[1],&Test[2],&Test[3],&Test[4],&Test[5],&Test[6],&Test[7],&Test[8]); 
+                        
+                        if(TriangleMatches != TRIANGLE_FACE_MATCH_COUNT)
                         {
                             SDL_Log("Incorrect number of faces in Obj %s", FilePath);
                             fclose(File);
                             
                             loaded_obj FailedResult = {};
-                            return FailedResult;
-                        }
+                            return FailedResult;   
+                        }                        
+                        
+                        TempVerticeIndices[LastTempVertIndiceIndex++] = Test[0];
+                        TempVerticeIndices[LastTempVertIndiceIndex++] = Test[3];
+                        TempVerticeIndices[LastTempVertIndiceIndex++] = Test[6];
+                        
+                        //TempUVsIndices[LastTempUVsIndiceIndex++] = Test[1];
+                       // TempUVsIndices[LastTempUVsIndiceIndex++] = Test[4];
+                        //TempUVsIndices[LastTempUVsIndiceIndex++] = Test[7];
+                        
+                       // TempNormalsIndices[LastTempNormalsIndiceIndex++] = Test[2];
+                        //TempNormalsIndices[LastTempNormalsIndiceIndex++] = Test[5];
+                        //TempNormalsIndices[LastTempNormalsIndiceIndex++] = Test[8];
                     }
                 } 
                 else
@@ -95,30 +112,19 @@ namespace load_obj
         }
         
         // 
-        Result.Vertices.Vertex = (V3*)PlatformAlloc(sizeof(V3) * LastTempVertIndex);
-        Result.Vertices.Vertex = TempVertices;
-        Result.Vertices.VertexCount = LastTempVertIndex;
         
-        Result.UVs.UVVertex = (V2*)PlatformAlloc(sizeof(V2) * LastTempUVsIndex);
-        Result.UVs.UVVertex = TempUVs;
-        Result.UVs.VertexCount = LastTempUVsIndex;
+        V3 FinalVertex[TEMP_BUFFER_SIZE] = {};
+        int FinalVertexIndex = 0;
+        for(int IndiceIndex = 0; IndiceIndex < LastTempVertIndiceIndex; ++IndiceIndex)
+        {
+            int VertexIndex = TempVerticeIndices[IndiceIndex];            
+            FinalVertex[FinalVertexIndex++] = TempVertices[VertexIndex - 1];
+        }
         
-        Result.Normals.Vertex = (V3*)PlatformAlloc(sizeof(V3) * LastTempNormalsIndex);
-        Result.Normals.Vertex = TempNormals;
-        Result.Normals.VertexCount = LastTempNormalsIndex;
-                
-        // Indices
-        Result.Vertices.Indice = (unsigned int*)PlatformAlloc(sizeof(int) * LastTempVertIndiceIndex);
-        Result.Vertices.Indice = TempVerticeIndices;
-        Result.Vertices.IndiceCount = LastTempVertIndiceIndex;
-        
-        Result.UVs.Indice = (unsigned int*)PlatformAlloc(sizeof(int) * LastTempUVsIndiceIndex);
-        Result.UVs.Indice = TempUVsIndices;
-        Result.UVs.IndiceCount = LastTempUVsIndiceIndex;
-        
-        Result.Normals.Indice = (unsigned int*)PlatformAlloc(sizeof(int) * LastTempNormalsIndiceIndex);
-        Result.Normals.Indice = TempNormalsIndices;
-        Result.Normals.IndiceCount = LastTempNormalsIndiceIndex;
+        Result.Vertices.Vertex = (V3*)PlatformAlloc(sizeof(V3) * FinalVertexIndex);
+        Result.Vertices.Vertex = FinalVertex;
+        Result.Vertices.VertexSize = sizeof(V3) * FinalVertexIndex;
+        Result.Vertices.IndiceCount = FinalVertexIndex;
         
         fclose(File);
         return Result;

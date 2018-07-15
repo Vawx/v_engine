@@ -4,8 +4,9 @@ int main(int argc, char* argv[])
 {   
     display::Make();
     
-    load_obj::LoadObj("../content/Cube.obj");
+    mesh::Make("../content/default_grid.tga", "../content/cube.obj", transforms::MakeFromVector(MakeV3(0.f, 0.f, 0.f)), false);
     
+    /*
     V3 cubePositions[] = {
         MakeV3( 0.0f,  0.0f,  0.0f), 
         MakeV3( 2.0f,  5.0f, -15.0f), 
@@ -24,8 +25,10 @@ int main(int argc, char* argv[])
         cube::Make("../content/default_grid.tga", transforms::MakeFromVector(cubePositions[i]), false); 
     }
     
+    
     transform QuadTransform = transforms::Make(MakeV3(0.f, 0.95f, 0.f), MakeV3(0.f, 0.f, 0.f), MakeV3(1.f, 0.05f, 1.f));
     quad::Make("../content/orange.tga", QuadTransform, true);
+    */
     while(display::Update())
     {
         timing::Begin();
@@ -33,8 +36,9 @@ int main(int argc, char* argv[])
         glClearColor(0.f, 0.1f, 0.0f, 1.f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
-        cube::Update();
-        quad::Update();
+        //cube::Update();
+        //quad::Update();
+        mesh::Update();
         
         timing::End();
         
