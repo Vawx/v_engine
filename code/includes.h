@@ -32,9 +32,6 @@ SDL_Log("Using Malloc!");
 #include "display.cpp"
 
 #include "loadobj.cpp"
-
-#include "cube.cpp"
-#include "quad.cpp"
 #include "mesh.cpp"
 
 #include "ui.cpp"

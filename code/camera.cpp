@@ -6,19 +6,19 @@ namespace camera
     static void Init(const float AspectRatio)
     {
         Transform = transforms::Empty();
-        Transform.Location = MakeV3(0.f, 0.f, -10.f);
+        Transform.Location = MakeV3(0.f, 0.f, 0.f);
         Transform.Rotation = MakeV3(0.f, 0.f, 0.f);
             
-        Projection = Perspective(DEFAULT_FOV, AspectRatio, 0.001f, 10000.f);
-        Ortho = Orthographic(0.f, WINDOW_WIDTH, 0.f, WINDOW_HEIGHT, 0.1f, 100.f);
-        RotateCamera(1.f, 1.f);
+        Projection = Perspective(DEFAULT_FOV, AspectRatio, CLIP_PLANE_SHORT, CLIP_PLANE_LONG);
+        Ortho = Orthographic(0.f, WINDOW_WIDTH, 0.f, WINDOW_HEIGHT, CLIP_PLANE_SHORT, CLIP_PLANE_LONG);
+        RotateCamera(0.f, 0.f);
     }
     
     static void ReInit(const int Width, const int Height)
     {   
         const float NewAspectRation = ((float)WINDOW_WIDTH / (float)WINDOW_HEIGHT);
-        Projection = Perspective(DEFAULT_FOV, NewAspectRation, 0.001f, 10000.f);
-        Ortho = Orthographic(0.f, Width, 0.f, Height, 0.1f, 100.f);
+        Projection = Perspective(DEFAULT_FOV, NewAspectRation, CLIP_PLANE_SHORT, CLIP_PLANE_LONG);
+        Ortho = Orthographic(0.f, Width, 0.f, Height, CLIP_PLANE_SHORT, CLIP_PLANE_LONG);
     }
     
     static void RotateCamera(const float XOffset, const float YOffset)
@@ -26,7 +26,7 @@ namespace camera
         Transform.Rotation.X += XOffset;
         Transform.Rotation.Y += YOffset;
         
-        V3 Rotation = MakeV3(1.f, 1.f, 1.f);
+        V3 Rotation = MakeV3(0.f, 0.f, 0.f);
         Rotation.X = cos(Radians(Transform.Rotation.X)) * cos(Radians(Transform.Rotation.Y));
         Rotation.Y = sin(Radians(Transform.Rotation.Y));
         Rotation.Z = sin(Radians(Transform.Rotation.X)) * cos(Radians(Transform.Rotation.Y));
@@ -50,26 +50,26 @@ namespace camera
         
         if(KeyPressed(SDLK_w))
         {
-            Transform.Location += CameraDirection * MOVE_SPEED(timing::DeltaTime);
+            Transform.Location += CameraDirection * MOVE_SPEED_SET(timing::DeltaTime, MOVE_SLOW);
         }
         if(KeyPressed(SDLK_s))
         {
-            Transform.Location -= CameraDirection * MOVE_SPEED(timing::DeltaTime);   
+            Transform.Location -= CameraDirection * MOVE_SPEED_SET(timing::DeltaTime, MOVE_SLOW);
         }
                 
         V3 Crossed = Cross(CameraDirection, V3_UP);
         if(KeyPressed(SDLK_d))
         {
-            Transform.Location += Normalize(Crossed) * MOVE_SPEED(timing::DeltaTime);
+            Transform.Location += Normalize(Crossed) * MOVE_SPEED_SET(timing::DeltaTime, MOVE_SLOW);
         }
         if(KeyPressed(SDLK_a))
         {
-            Transform.Location -= Normalize(Crossed) * MOVE_SPEED(timing::DeltaTime);   
+            Transform.Location -= Normalize(Crossed) * MOVE_SPEED_SET(timing::DeltaTime, MOVE_SLOW);
         }
         
         if(KeyPressed(SDLK_SPACE))
         {
-            Transform.Location.Y -= MOVE_SPEED(timing::DeltaTime);
+            Transform.Location.Y -= MOVE_SPEED_SET(timing::DeltaTime, MOVE_SLOW);
         }
         
         if(ButtonPressed(SDL_BUTTON_RIGHT) && ButtonPressed(SDL_BUTTON_LEFT))
@@ -112,8 +112,8 @@ namespace camera
         }
         else if(ButtonPressed(SDL_BUTTON_RIGHT))
         {               
-            const float DifferenceX = (LastMouseX - CurrentMouseX) * MOVE_SPEED_SET(timing::DeltaTime, 10.f);
-            const float DifferenceY = (CurrentMouseY - LastMouseY) * MOVE_SPEED_SET(timing::DeltaTime, 10.f);
+            const float DifferenceX = (LastMouseX - CurrentMouseX) * MOVE_SPEED_SET(timing::DeltaTime, MOVE_SLOW);
+            const float DifferenceY = (CurrentMouseY - LastMouseY) * MOVE_SPEED_SET(timing::DeltaTime, MOVE_SLOW);
             
             if(DifferenceX != 0.f || DifferenceY != 0.f)
             {
@@ -124,21 +124,21 @@ namespace camera
         {
             if(CurrentMouseY > LastMouseY)
             {                
-                Transform.Location -= CameraDirection * MOVE_SPEED_SET(timing::DeltaTime, 40.f);
+                Transform.Location -= CameraDirection * MOVE_SPEED_SET(timing::DeltaTime, MOVE_FAST);
             }
             else if(CurrentMouseY < LastMouseY)
             {                
-                Transform.Location += CameraDirection * MOVE_SPEED_SET(timing::DeltaTime, 40.f);
+                Transform.Location += CameraDirection * MOVE_SPEED_SET(timing::DeltaTime, MOVE_FAST);
             }
         }
         
         if(WheelDirection == MOUSE_WHEEL_DIRECTION::UP)
         {           
-            Transform.Location += CameraDirection * MOVE_SPEED_SET(timing::DeltaTime, 60.f);
+            Transform.Location += CameraDirection * MOVE_SPEED_SET(timing::DeltaTime, MOVE_REAL_FAST);
         }
         else if(WheelDirection == MOUSE_WHEEL_DIRECTION::DOWN)
         {            
-            Transform.Location -= CameraDirection * MOVE_SPEED_SET(timing::DeltaTime, 60.f);
+            Transform.Location -= CameraDirection * MOVE_SPEED_SET(timing::DeltaTime, MOVE_REAL_FAST);
         }
         
         LastMouseY = CurrentMouseY;
@@ -150,10 +150,10 @@ namespace camera
     
     void TransformCamera(const GLuint ShaderID)
     {           
-        unsigned int ViewID = glGetUniformLocation(ShaderID, "view");
+        unsigned int ViewID = glGetUniformLocation(ShaderID, VIEW);
         glUniformMatrix4fv(ViewID, 1, GL_FALSE, View.M[0]);  
         
-        unsigned int ProjectionID = glGetUniformLocation(ShaderID, "projection");
+        unsigned int ProjectionID = glGetUniformLocation(ShaderID, PROJECTION);
         glUniformMatrix4fv(ProjectionID, 1, GL_FALSE, Projection.M[0]);
     }
 };

@@ -7,7 +7,7 @@
 
 namespace display
 {
-    #define RENDER_POLYS 1
+    #define RENDER_POLYS 0
     
     enum SwapInterval
     {

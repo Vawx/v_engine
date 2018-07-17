@@ -56,6 +56,14 @@ namespace math
         struct 
         {
             float Width, Height;  
+        };        
+    };
+    
+    union iV2
+    {        
+        struct
+        {
+            int Size, Count;  
         };
     };
     

@@ -4,8 +4,9 @@
 #include "image.cpp"
 
 namespace renderable
-{
-    renderable_info Make(const char* TextureFilePath, const int VerticesSize, const float Vertices[], const int IndiceSize, const int Indices[], bool bOrtho)
+{   
+    renderable_info Make(const char* TextureFilePath, const int VerticesSize, const V3 Vertices[], 
+                         const int UVSize, const V2 UVs[], const int NormalSize, const V3 Normals[], bool bOrtho)
     {
         renderable_info Result = {};
         Result.ShaderInfo = shader::Make(bOrtho);
@@ -13,52 +14,15 @@ namespace renderable
         Result.Transform = transforms::Empty();
         
         glGenVertexArrays(1, &Result.VAO);
-        glGenBuffers(1, &Result.VBO);
-        glGenBuffers(1, &Result.EBO);
-        
         glBindVertexArray(Result.VAO);
         
-        glBindBuffer(GL_ARRAY_BUFFER, Result.VBO);
-        glBufferData(GL_ARRAY_BUFFER, VerticesSize, Vertices, GL_STATIC_DRAW);
-        
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Result.EBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, IndiceSize, Indices, GL_STATIC_DRAW);        
-        return Result;
-    }
-
-    renderable_info Make(const char* TextureFilePath, const int VerticesSize, const float Vertices[], bool bOrtho)
-    {
-        renderable_info Result = {};
-        Result.ShaderInfo = shader::Make(bOrtho);
-        Result.TextureInfo = image::Load(TextureFilePath);
-        Result.Transform = transforms::Empty();
-        
-        glGenVertexArrays(1, &Result.VAO);
         glGenBuffers(1, &Result.VBO);
-        
-        glBindVertexArray(Result.VAO);
-        
-        glBindBuffer(GL_ARRAY_BUFFER, Result.VBO);
-        glBufferData(GL_ARRAY_BUFFER, VerticesSize, Vertices, GL_STATIC_DRAW);
-        
-        Result.EBO = 0;
-        return Result;
-    }
-    
-    static renderable_info Make(const char* TextureFilePath, const int VerticesSize, const V3 Vertices[], bool bOrtho)
-    {        
-        renderable_info Result = {};
-        Result.ShaderInfo = shader::Make(bOrtho);
-        Result.TextureInfo = image::Load(TextureFilePath);
-        Result.Transform = transforms::Empty();
-        
-        glGenVertexArrays(1, &Result.VAO);
-        glGenBuffers(1, &Result.VBO);
-        
-        glBindVertexArray(Result.VAO);
-        
-        glBindBuffer(GL_ARRAY_BUFFER, Result.VBO);
+        glBindBuffer(GL_ARRAY_BUFFER, Result.VBO);        
         glBufferData(GL_ARRAY_BUFFER, VerticesSize, &Vertices[0], GL_STATIC_DRAW);
+        
+        glGenBuffers(1, &Result.UV);
+        glBindBuffer(GL_ARRAY_BUFFER, Result.UV);        
+        glBufferData(GL_ARRAY_BUFFER, UVSize, &UVs[0], GL_STATIC_DRAW);
         
         Result.EBO = 0;
         return Result;
@@ -89,19 +53,18 @@ namespace renderable
         glBindTexture(GL_TEXTURE_2D, Info.TextureInfo.TextureID);
         glBindVertexArray(Info.VAO);
         
-        if(Info.Type == RENDERABLE_TYPE::ELEMENTS)
-        {
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Info.EBO);
-            glDrawElements(GL_TRIANGLES, Info.IndiceCount, GL_UNSIGNED_INT, 0);
-        }
-        else if(Info.Type == RENDERABLE_TYPE::ARRAYS)
-        {
-            glDrawArrays(GL_TRIANGLES, 0, Info.IndiceCount);
-        }
-        else
-        {
-            SDL_Log("Cannot draw. Incorrect type: %d", Info.Type);
-        }
+        glEnableVertexAttribArray(0);
+        glBindBuffer(GL_ARRAY_BUFFER, Info.VBO);            
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+        
+        glEnableVertexAttribArray(1);
+        glBindBuffer(GL_ARRAY_BUFFER, Info.UV);            
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+        
+        glDrawArrays(GL_TRIANGLES, 0, Info.IndiceCount);
+        
+        glDisableVertexAttribArray(0);
+        glDisableVertexAttribArray(1);
         
         glBindVertexArray(0);      
     }

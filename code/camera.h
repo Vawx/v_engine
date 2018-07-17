@@ -9,7 +9,17 @@ namespace camera
     #define WINDOW_WIDTH 1280
     #define WINDOW_HEIGHT 720
     #define DEFAULT_FOV 90.f
-    #define MOVE_SPEED(Delta) Delta * 10.f
+    
+    #define CLIP_PLANE_SHORT 0.1f
+    #define CLIP_PLANE_LONG 1024 * 128
+    
+    #define VIEW "view"
+    #define PROJECTION "projection"
+    
+    #define MOVE_SLOW 10.f
+    #define MOVE_MEDIUM 20.f
+    #define MOVE_FAST 40.f
+    #define MOVE_REAL_FAST 60.f
     #define MOVE_SPEED_SET(Delta, Amount) Delta * Amount
     
     transform Transform;
